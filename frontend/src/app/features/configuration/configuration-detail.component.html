@@ -1,0 +1,57 @@
+@if (loading()) {
+  <mat-progress-bar mode="indeterminate" aria-label="Loading configuration" />
+}
+
+@if (config(); as cfg) {
+  <div class="page-header">
+    <div>
+      <h1>{{ cfg.name }}</h1>
+      <p><span class="mono">{{ cfg.key }}</span></p>
+    </div>
+    <div class="header-actions">
+      <button mat-stroked-button *appHasPermission="'configuration:edit'" (click)="edit()">
+        <mat-icon>edit</mat-icon> Edit
+      </button>
+      <button mat-stroked-button *appHasPermission="'configuration:create'" (click)="duplicate()">
+        <mat-icon>content_copy</mat-icon> Duplicate
+      </button>
+      @if (canToggle) {
+        <button mat-stroked-button (click)="toggle()">
+          <mat-icon>{{ cfg.status === 'ACTIVE' ? 'toggle_off' : 'toggle_on' }}</mat-icon>
+          {{ cfg.status === 'ACTIVE' ? 'Disable' : 'Enable' }}
+        </button>
+      }
+      <button mat-stroked-button color="warn" *appHasPermission="'configuration:delete'" (click)="remove()">
+        <mat-icon>delete</mat-icon> Delete
+      </button>
+    </div>
+  </div>
+
+  <mat-card appearance="outlined">
+    <mat-card-content>
+      <dl class="details">
+        <div><dt>Status</dt><dd><app-status-chip [status]="cfg.status" /></dd></div>
+        <div><dt>Category</dt><dd>{{ cfg.category }}</dd></div>
+        <div><dt>Environment</dt><dd>{{ environmentName() }}</dd></div>
+        <div><dt>Type</dt><dd>{{ typeLabels[cfg.type] }}</dd></div>
+        <div class="span-2"><dt>Description</dt><dd>{{ cfg.description || '—' }}</dd></div>
+        <div class="span-2"><dt>Value</dt><dd><code>{{ cfg.value | configValue: cfg.type }}</code></dd></div>
+        <div class="span-2"><dt>Default value</dt><dd><code>{{ cfg.defaultValue | configValue: cfg.type }}</code></dd></div>
+        <div><dt>Owner</dt><dd>{{ ownerName() }}</dd></div>
+        <div><dt>Created</dt><dd>{{ cfg.createdAt | date: 'medium' }} by {{ createdByName() }}</dd></div>
+        <div><dt>Last updated</dt><dd>{{ cfg.updatedAt | date: 'medium' }} by {{ updatedByName() }}</dd></div>
+      </dl>
+    </mat-card-content>
+  </mat-card>
+
+  <a mat-button routerLink="/configuration" class="back-link">
+    <mat-icon>arrow_back</mat-icon> Back to configurations
+  </a>
+} @else if (!loading()) {
+  <mat-card appearance="outlined">
+    <mat-card-content>
+      <p>Configuration not found.</p>
+      <a mat-flat-button color="primary" routerLink="/configuration">Back to configurations</a>
+    </mat-card-content>
+  </mat-card>
+}

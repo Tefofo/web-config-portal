@@ -1,0 +1,38 @@
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  mat-form-field {
+    flex: 1 1 180px;
+    min-width: 160px;
+  }
+
+  .search {
+    flex: 2 1 260px;
+  }
+}
+
+.mono {
+  font-family: 'Roboto Mono', ui-monospace, monospace;
+  font-size: 0.85em;
+}
+
+table {
+  width: 100%;
+}
+
+.value-cell {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .filters mat-form-field {
+    flex-basis: 100%;
+  }
+}

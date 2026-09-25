@@ -1,0 +1,12 @@
+table {
+  width: 100%;
+}
+
+.count-pill {
+  display: inline-block;
+  min-width: 1.5rem;
+  padding: 0.1rem 0.5rem;
+  text-align: center;
+  border-radius: 999px;
+  background: var(--mat-sys-surface-container-high);
+}

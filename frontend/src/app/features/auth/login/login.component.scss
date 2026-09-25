@@ -1,0 +1,53 @@
+.login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: var(--mat-sys-surface-container);
+
+  &__card {
+    width: 100%;
+    max-width: 420px;
+    overflow: hidden;
+  }
+
+  &__error {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    background: color-mix(in srgb, #d32f2f 12%, transparent);
+    color: #b71c1c;
+  }
+
+  &__field {
+    width: 100%;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  &__submit {
+    margin-top: 1rem;
+  }
+
+  &__hint {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--mat-sys-outline-variant);
+    font: var(--mat-sys-body-small);
+    color: var(--mat-sys-on-surface-variant);
+
+    ul {
+      margin: 0.5rem 0 0;
+      padding-left: 1.2rem;
+    }
+  }
+}

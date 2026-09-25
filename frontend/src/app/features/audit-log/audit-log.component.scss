@@ -1,0 +1,30 @@
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+
+  mat-form-field {
+    flex: 1 1 180px;
+    min-width: 150px;
+  }
+}
+
+table {
+  width: 100%;
+}
+
+.mono {
+  font-family: 'Roboto Mono', ui-monospace, monospace;
+  font-size: 0.85em;
+}
+
+.description-cell {
+  max-width: 280px;
+}
+
+@media (max-width: 720px) {
+  .filters mat-form-field {
+    flex-basis: 100%;
+  }
+}

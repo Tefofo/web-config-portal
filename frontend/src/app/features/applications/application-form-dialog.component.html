@@ -1,0 +1,62 @@
+<h2 mat-dialog-title>{{ isEdit() ? 'Edit Application' : 'New Application' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="dialog-form" (ngSubmit)="save()" novalidate>
+    <mat-form-field appearance="outline">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" required />
+      @if (form.controls.name.hasError('required') && form.controls.name.touched) {
+        <mat-error>Name is required.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Code</mat-label>
+      <input matInput formControlName="code" required placeholder="billing-service" />
+      @if (isEdit()) {
+        <mat-hint>Code cannot be changed after creation.</mat-hint>
+      }
+      @if (form.controls.code.hasError('required') && form.controls.code.touched) {
+        <mat-error>Code is required.</mat-error>
+      }
+      @if (form.controls.code.hasError('pattern') && form.controls.code.touched) {
+        <mat-error>Use lowercase letters, numbers and hyphens (e.g. billing-service).</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Environment</mat-label>
+      <mat-select formControlName="environmentId" required>
+        @for (env of environments; track env.id) {
+          <mat-option [value]="env.id">{{ env.name }}</mat-option>
+        }
+      </mat-select>
+      @if (isEdit()) {
+        <mat-hint>Environment cannot be changed after creation.</mat-hint>
+      }
+      @if (form.controls.environmentId.hasError('required') && form.controls.environmentId.touched) {
+        <mat-error>Environment is required.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="status" required>
+        <mat-option value="ACTIVE">Active</mat-option>
+        <mat-option value="INACTIVE">Inactive</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description" rows="2"></textarea>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" (click)="cancel()">Cancel</button>
+  <button mat-flat-button color="primary" type="button" (click)="save()">
+    {{ isEdit() ? 'Save' : 'Create' }}
+  </button>
+</mat-dialog-actions>

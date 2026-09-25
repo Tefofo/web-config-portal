@@ -1,0 +1,111 @@
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+// Learn more about theming and how to use it for your application's
+// custom components at https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+
+html {
+  height: 100%;
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$azure-palette,
+        tertiary: mat.$blue-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+}
+
+body {
+  // Default the application to a light color theme. This can be changed to
+  // `dark` to enable the dark color theme, or to `light dark` to defer to the
+  // user's system settings.
+  color-scheme: light;
+
+  // Set a default background, font and text colors for the application using
+  // Angular Material's system-level CSS variables. Learn more about these
+  // variables at https://material.angular.dev/guide/system-variables
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  // Reset the user agent margin.
+  margin: 0;
+  height: 100%;
+}
+/* You can add global styles to this file, and also import other style files */
+
+// --- Application-wide utility styles ---------------------------------------
+
+// Semantic snackbar colours. Colour is paired with the message text (and the
+// "Dismiss" action), never used as the sole signal.
+.wcp-snackbar {
+  --mat-snack-bar-button-color: currentColor;
+
+  &--success .mdc-snackbar__surface {
+    background-color: #2e7d32 !important;
+  }
+  &--error .mdc-snackbar__surface {
+    background-color: #c62828 !important;
+  }
+  &--warning .mdc-snackbar__surface {
+    background-color: #ed6c02 !important;
+  }
+  &--info .mdc-snackbar__surface {
+    background-color: #0277bd !important;
+  }
+}
+
+// Consistent page container helpers used across features.
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+
+  h1 {
+    margin: 0 0 0.25rem;
+    font: var(--mat-sys-headline-small);
+  }
+
+  p {
+    margin: 0;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+}
+
+table.full-width {
+  width: 100%;
+}
+
+// Respect users who prefer reduced motion.
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+// Shared dialog form layout (stacked full-width fields).
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: min(420px, 80vw);
+
+  mat-form-field {
+    width: 100%;
+  }
+}

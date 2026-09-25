@@ -1,0 +1,117 @@
+<div class="page-header">
+  <div>
+    <h1>Users</h1>
+    <p>Manage portal users and their access.</p>
+  </div>
+  @if (canManage) {
+    <button mat-flat-button color="primary" type="button" (click)="create()">
+      <mat-icon>person_add</mat-icon>
+      New User
+    </button>
+  }
+</div>
+
+<mat-card appearance="outlined">
+  <mat-card-content>
+    <div class="filters" role="search">
+      <mat-form-field appearance="outline" class="search">
+        <mat-label>Search</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput [formControl]="searchControl" placeholder="Name or email" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Role</mat-label>
+        <mat-select [formControl]="roleControl">
+          <mat-option value="">All</mat-option>
+          @for (role of roles; track role) {
+            <mat-option [value]="role">{{ roleLabels[role] }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Status</mat-label>
+        <mat-select [formControl]="statusControl">
+          <mat-option value="">All</mat-option>
+          <mat-option value="ACTIVE">Active</mat-option>
+          <mat-option value="INACTIVE">Inactive</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    @if (loading()) {
+      <mat-progress-bar mode="indeterminate" aria-label="Loading users" />
+    }
+
+    @if (error()) {
+      <app-empty-state icon="error" title="Unable to load users" actionLabel="Try again" (action)="fetch()" />
+    } @else if (!loading() && rows().length === 0) {
+      <app-empty-state icon="group" title="No users found" message="Try changing your filters." />
+    } @else {
+      <div class="table-wrapper">
+        <table mat-table [dataSource]="rows()">
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <td mat-cell *matCellDef="let row">{{ row.firstName }} {{ row.lastName }}</td>
+          </ng-container>
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef>Email</th>
+            <td mat-cell *matCellDef="let row">{{ row.email }}</td>
+          </ng-container>
+          <ng-container matColumnDef="role">
+            <th mat-header-cell *matHeaderCellDef>Role</th>
+            <td mat-cell *matCellDef="let row">{{ roleLabel(row.role) }}</td>
+          </ng-container>
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let row"><app-status-chip [status]="row.status" /></td>
+          </ng-container>
+          <ng-container matColumnDef="lastLogin">
+            <th mat-header-cell *matHeaderCellDef>Last Login</th>
+            <td mat-cell *matCellDef="let row">{{ row.lastLoginAt ? (row.lastLoginAt | date: 'short') : 'Never' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="created">
+            <th mat-header-cell *matHeaderCellDef>Created</th>
+            <td mat-cell *matCellDef="let row">{{ row.createdAt | date: 'mediumDate' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row">
+              @if (canManage) {
+                <button mat-icon-button [matMenuTriggerFor]="menu" [attr.aria-label]="'Actions for ' + row.firstName">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item (click)="edit(row)">
+                    <mat-icon>edit</mat-icon><span>Edit</span>
+                  </button>
+                  @if (row.status === 'INACTIVE') {
+                    <button mat-menu-item (click)="setActive(row, true)">
+                      <mat-icon>check_circle</mat-icon><span>Activate</span>
+                    </button>
+                  } @else {
+                    <button mat-menu-item (click)="setActive(row, false)">
+                      <mat-icon color="warn">block</mat-icon><span>Deactivate</span>
+                    </button>
+                  }
+                </mat-menu>
+              }
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="columns"></tr>
+          <tr mat-row *matRowDef="let row; columns: columns"></tr>
+        </table>
+      </div>
+
+      <mat-paginator
+        [length]="total()"
+        [pageSize]="pageSize()"
+        [pageSizeOptions]="[5, 10, 25]"
+        (page)="onPage($event)"
+        aria-label="Select page of users"
+      />
+    }
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,114 @@
+<div class="page-header">
+  <div>
+    <h1>Dashboard</h1>
+    <p>Overview of your configuration landscape.</p>
+  </div>
+  <button mat-stroked-button type="button" (click)="load()" [disabled]="loading()">
+    <mat-icon>refresh</mat-icon>
+    Refresh
+  </button>
+</div>
+
+@if (loading()) {
+  <mat-progress-bar mode="indeterminate" aria-label="Loading dashboard" />
+}
+
+@if (error()) {
+  <mat-card appearance="outlined">
+    <mat-card-content>
+      <p>Unable to load dashboard data.</p>
+      <button mat-flat-button color="primary" (click)="load()">Try again</button>
+    </mat-card-content>
+  </mat-card>
+} @else {
+  <section class="cards" aria-label="Summary">
+    @for (card of cards(); track card.label) {
+      @if (card.route) {
+        <a mat-card class="summary-card" [routerLink]="card.route">
+          <mat-card-content class="summary-card__body">
+            <span class="summary-card__icon"><mat-icon aria-hidden="true">{{ card.icon }}</mat-icon></span>
+            <span>
+              <div class="summary-card__value">{{ card.value }}</div>
+              <div class="summary-card__label">{{ card.label }}</div>
+            </span>
+          </mat-card-content>
+        </a>
+      } @else {
+        <mat-card class="summary-card" appearance="outlined">
+          <mat-card-content class="summary-card__body">
+            <span class="summary-card__icon"><mat-icon aria-hidden="true">{{ card.icon }}</mat-icon></span>
+            <span>
+              <div class="summary-card__value">{{ card.value }}</div>
+              <div class="summary-card__label">{{ card.label }}</div>
+            </span>
+          </mat-card-content>
+        </mat-card>
+      }
+    }
+  </section>
+
+  <div class="section-grid">
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Recent Configuration Changes</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="table-wrapper">
+          <table mat-table [dataSource]="recentChanges()">
+            <ng-container matColumnDef="description">
+              <th mat-header-cell *matHeaderCellDef>Configuration</th>
+              <td mat-cell *matCellDef="let e">{{ e.description }}</td>
+            </ng-container>
+            <ng-container matColumnDef="environment">
+              <th mat-header-cell *matHeaderCellDef>Environment</th>
+              <td mat-cell *matCellDef="let e">{{ environmentName()(e.environmentId) }}</td>
+            </ng-container>
+            <ng-container matColumnDef="user">
+              <th mat-header-cell *matHeaderCellDef>Changed By</th>
+              <td mat-cell *matCellDef="let e">{{ e.userName }}</td>
+            </ng-container>
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef>Change Type</th>
+              <td mat-cell *matCellDef="let e">{{ e.action }}</td>
+            </ng-container>
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef>Date</th>
+              <td mat-cell *matCellDef="let e">{{ e.timestamp | date: 'short' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="result">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let e"><app-status-chip [status]="e.result" /></td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="changeColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: changeColumns"></tr>
+          </table>
+        </div>
+        @if (!loading() && recentChanges().length === 0) {
+          <p>No recent configuration changes.</p>
+        }
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Recent Activity</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ul class="activity-list">
+          @for (event of recentActivity(); track event.id) {
+            <li>
+              <mat-icon class="activity-icon" aria-hidden="true">radio_button_checked</mat-icon>
+              <div>
+                <div>{{ event.description }}</div>
+                <div class="activity-meta">{{ event.userName }} · {{ event.timestamp | date: 'short' }}</div>
+              </div>
+            </li>
+          }
+        </ul>
+        @if (!loading() && recentActivity().length === 0) {
+          <p>No recent activity.</p>
+        }
+      </mat-card-content>
+    </mat-card>
+  </div>
+}

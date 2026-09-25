@@ -1,0 +1,42 @@
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.625rem;
+  border-radius: 999px;
+  font: var(--mat-sys-label-medium);
+  border: 1px solid transparent;
+  white-space: nowrap;
+
+  &__icon {
+    font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
+  }
+
+  &--success {
+    background: color-mix(in srgb, #2e7d32 14%, transparent);
+    color: #1b5e20;
+    border-color: color-mix(in srgb, #2e7d32 40%, transparent);
+  }
+  &--neutral {
+    background: color-mix(in srgb, #616161 14%, transparent);
+    color: #424242;
+    border-color: color-mix(in srgb, #616161 34%, transparent);
+  }
+  &--warn {
+    background: color-mix(in srgb, #ed6c02 16%, transparent);
+    color: #a34a00;
+    border-color: color-mix(in srgb, #ed6c02 40%, transparent);
+  }
+  &--error {
+    background: color-mix(in srgb, #d32f2f 14%, transparent);
+    color: #b71c1c;
+    border-color: color-mix(in srgb, #d32f2f 40%, transparent);
+  }
+  &--info {
+    background: color-mix(in srgb, #0288d1 14%, transparent);
+    color: #01579b;
+    border-color: color-mix(in srgb, #0288d1 40%, transparent);
+  }
+}

@@ -1,0 +1,50 @@
+table {
+  width: 100%;
+}
+
+code {
+  font-family: monospace;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  background: var(--mat-sys-surface-container-high);
+}
+
+.create-key-form {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+
+  mat-form-field {
+    flex: 1 1 12rem;
+  }
+
+  button {
+    margin-top: 0.35rem;
+  }
+}
+
+.revealed-key {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--mat-sys-error, #b3261e);
+  background: var(--mat-sys-error-container, #f9dedc);
+
+  &__header {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
+  &__field {
+    width: 100%;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+}

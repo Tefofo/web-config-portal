@@ -1,0 +1,282 @@
+// Multi-tenant Configuration Management SaaS — Prisma schema.
+// Every tenant-owned entity carries tenantId and is indexed by it; the backend
+// scopes all queries by tenantId to enforce isolation.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// --- Enums ------------------------------------------------------------------
+
+enum TenantStatus {
+  ACTIVE
+  SUSPENDED
+  INACTIVE
+}
+
+enum UserRole {
+  PLATFORM_ADMIN
+  ADMIN
+  CONFIGURATION_MANAGER
+  VIEWER
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  LOCKED
+}
+
+enum EnvironmentStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum EnvironmentType {
+  DEVELOPMENT
+  TEST
+  STAGING
+  PRODUCTION
+}
+
+enum ConfigurationType {
+  STRING
+  NUMBER
+  BOOLEAN
+  SELECT
+  DATE
+  JSON
+}
+
+enum ConfigurationStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum ApplicationStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum SubscriptionPlan {
+  STARTER
+  BUSINESS
+  ENTERPRISE
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELLED
+}
+
+// --- Models -----------------------------------------------------------------
+
+model Tenant {
+  id     String       @id @default(cuid())
+  name   String
+  slug   String       @unique
+  status TenantStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users          User[]
+  environments   Environment[]
+  configurations Configuration[]
+  applications   Application[]
+  apiKeys        ApiKey[]
+  auditLogs      AuditLog[]
+  subscriptions  Subscription[]
+  featureFlags   FeatureFlag[]
+}
+
+model User {
+  id           String @id @default(cuid())
+  tenantId     String?
+  email        String
+  passwordHash String
+
+  firstName String
+  lastName  String
+
+  role   UserRole
+  status UserStatus @default(ACTIVE)
+
+  lastLoginAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant Tenant? @relation(fields: [tenantId], references: [id])
+
+  @@unique([tenantId, email])
+  @@index([tenantId])
+}
+
+model Environment {
+  id       String @id @default(cuid())
+  tenantId String
+
+  name        String
+  code        String
+  type        EnvironmentType   @default(DEVELOPMENT)
+  description String?
+  status      EnvironmentStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant         Tenant          @relation(fields: [tenantId], references: [id])
+  configurations Configuration[]
+  applications   Application[]
+
+  @@unique([tenantId, code])
+  @@index([tenantId])
+}
+
+model Configuration {
+  id            String @id @default(cuid())
+  tenantId      String
+  environmentId String
+
+  name        String
+  key         String
+  description String?
+  category    String
+
+  type ConfigurationType
+
+  value        Json
+  defaultValue Json?
+
+  status ConfigurationStatus @default(ACTIVE)
+
+  ownerId     String?
+  createdById String
+  updatedById String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant      Tenant      @relation(fields: [tenantId], references: [id])
+  environment Environment @relation(fields: [environmentId], references: [id])
+
+  @@unique([tenantId, environmentId, key])
+  @@index([tenantId])
+  @@index([environmentId])
+}
+
+model Application {
+  id            String @id @default(cuid())
+  tenantId      String
+  environmentId String
+
+  name        String
+  code        String
+  description String?
+
+  status ApplicationStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant      Tenant      @relation(fields: [tenantId], references: [id])
+  environment Environment @relation(fields: [environmentId], references: [id])
+  apiKeys     ApiKey[]
+
+  @@unique([tenantId, code])
+  @@index([tenantId])
+  @@index([environmentId])
+}
+
+model ApiKey {
+  id            String @id @default(cuid())
+  tenantId      String
+  applicationId String
+
+  name    String
+  keyHash String
+  prefix  String
+
+  lastUsedAt DateTime?
+  expiresAt  DateTime?
+  revokedAt  DateTime?
+
+  createdAt DateTime @default(now())
+
+  tenant      Tenant      @relation(fields: [tenantId], references: [id])
+  application Application @relation(fields: [applicationId], references: [id])
+
+  @@index([tenantId])
+  @@index([applicationId])
+}
+
+model AuditLog {
+  id       String  @id @default(cuid())
+  tenantId String
+  userId   String?
+
+  action   String
+  entity   String
+  entityId String?
+
+  description String?
+  metadata    Json?
+
+  ipAddress String?
+  userAgent String?
+
+  createdAt DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@index([tenantId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model Subscription {
+  id       String @id @default(cuid())
+  tenantId String
+
+  plan   SubscriptionPlan
+  status SubscriptionStatus @default(ACTIVE)
+
+  // Null limit means "unlimited" (e.g. ENTERPRISE).
+  userLimit          Int?
+  environmentLimit   Int?
+  applicationLimit   Int?
+  configurationLimit Int?
+
+  startDate DateTime @default(now())
+  endDate   DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@index([tenantId])
+}
+
+model FeatureFlag {
+  id       String @id @default(cuid())
+  tenantId String
+
+  key     String
+  enabled Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@unique([tenantId, key])
+  @@index([tenantId])
+}

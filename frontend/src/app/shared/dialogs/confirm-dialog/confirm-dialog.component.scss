@@ -1,0 +1,9 @@
+h2[mat-dialog-title] {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+mat-progress-spinner {
+  display: inline-block;
+}

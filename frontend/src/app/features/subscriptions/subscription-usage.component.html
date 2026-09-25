@@ -1,0 +1,72 @@
+<div class="page-header">
+  <div>
+    <h1>Subscription &amp; Usage</h1>
+    <p>Review your current plan, renewal date, and how much of each limit you are using.</p>
+  </div>
+</div>
+
+@if (loading()) {
+  <mat-progress-bar mode="indeterminate" aria-label="Loading subscription" />
+}
+
+@if (error()) {
+  <app-empty-state
+    icon="error"
+    title="Unable to load subscription"
+    actionLabel="Try again"
+    (action)="fetch()"
+  />
+} @else if (view(); as v) {
+  <div class="cards">
+    <mat-card appearance="outlined" class="plan-card">
+      <mat-card-header>
+        <mat-card-title>Current plan</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="plan-row">
+          <span class="plan-name">{{ v.subscription.plan }}</span>
+          <app-status-chip [status]="v.subscription.status" />
+        </div>
+        <p class="renewal">Renews {{ v.subscription.endDate | date: 'mediumDate' }}</p>
+        @if (canManage) {
+          <button mat-flat-button color="primary" type="button" (click)="upgrade()" [disabled]="upgrading()">
+            <mat-icon>workspace_premium</mat-icon>
+            Upgrade plan
+          </button>
+        }
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card appearance="outlined" class="usage-card">
+      <mat-card-header>
+        <mat-card-title>Usage</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        @for (row of usageRows(); track row.label) {
+          <div class="usage-metric" [class.usage-metric--warn]="row.warn">
+            <div class="usage-metric__head">
+              <span class="usage-metric__label">{{ row.label }}</span>
+              <span class="usage-metric__count">
+                @if (row.unlimited) {
+                  {{ row.used }} / Unlimited
+                } @else {
+                  {{ row.used }} / {{ row.limit }}
+                }
+                @if (row.warn) {
+                  <mat-icon class="usage-metric__warn-icon" aria-hidden="true">warning</mat-icon>
+                  <span class="usage-metric__warn-text">Approaching limit</span>
+                }
+              </span>
+            </div>
+            <mat-progress-bar
+              mode="determinate"
+              [value]="row.percent"
+              [color]="row.warn ? 'warn' : 'primary'"
+              [attr.aria-label]="row.label + ' usage'"
+            />
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+  </div>
+}

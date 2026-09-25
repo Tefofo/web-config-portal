@@ -1,0 +1,30 @@
+table {
+  width: 100%;
+}
+
+.matrix-icon {
+  &--yes {
+    color: #2e7d32;
+  }
+  &--no {
+    color: var(--mat-sys-outline);
+  }
+}
+
+.role-section {
+  margin-bottom: 1.5rem;
+}
+
+.perm-count {
+  display: inline-block;
+  min-width: 1.5rem;
+  padding: 0.1rem 0.5rem;
+  text-align: center;
+  border-radius: 999px;
+  background: var(--mat-sys-surface-container-high);
+}
+
+h2.matrix-title {
+  font: var(--mat-sys-title-medium);
+  margin: 1.5rem 0 0.5rem;
+}

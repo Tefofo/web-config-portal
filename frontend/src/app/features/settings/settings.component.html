@@ -1,0 +1,77 @@
+<div class="page-header">
+  <div>
+    <h1>System Settings</h1>
+    <p>Configure portal-wide behaviour.</p>
+  </div>
+</div>
+
+<mat-card appearance="outlined">
+  @if (loading()) {
+    <mat-progress-bar mode="indeterminate" aria-label="Loading settings" />
+  }
+  <mat-card-content>
+    @if (!canManage) {
+      <p class="readonly-note">
+        <mat-icon aria-hidden="true">lock</mat-icon>
+        You have read-only access. Only administrators can change these settings.
+      </p>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="save()" novalidate>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Application name</mat-label>
+        <input matInput formControlName="applicationName" required />
+        @if (form.controls.applicationName.hasError('required') && form.controls.applicationName.touched) {
+          <mat-error>Application name is required.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Default environment</mat-label>
+        <mat-select formControlName="defaultEnvironmentId" required>
+          @for (env of environments(); track env.id) {
+            <mat-option [value]="env.id">{{ env.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Session timeout (minutes)</mat-label>
+        <input matInput type="number" formControlName="sessionTimeoutMinutes" required />
+        @if (form.controls.sessionTimeoutMinutes.invalid && form.controls.sessionTimeoutMinutes.touched) {
+          <mat-error>Enter a value between 1 and 480.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Date/time format</mat-label>
+        <mat-select formControlName="dateTimeFormat" required>
+          @for (format of dateFormats; track format) {
+            <mat-option [value]="format">{{ format }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Default page size</mat-label>
+        <input matInput type="number" formControlName="defaultPageSize" required />
+        @if (form.controls.defaultPageSize.invalid && form.controls.defaultPageSize.touched) {
+          <mat-error>Enter a value between 5 and 100.</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="toggles span-2">
+        <mat-slide-toggle formControlName="enableAuditLogging">Enable audit logging</mat-slide-toggle>
+        <mat-slide-toggle formControlName="enableNotifications">Enable notifications</mat-slide-toggle>
+      </div>
+
+      @if (canManage) {
+        <div class="actions span-2">
+          <button mat-flat-button color="primary" type="submit" [disabled]="saving() || form.pristine">
+            {{ saving() ? 'Saving…' : 'Save settings' }}
+          </button>
+        </div>
+      }
+    </form>
+  </mat-card-content>
+</mat-card>
