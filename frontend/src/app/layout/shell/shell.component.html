@@ -49,6 +49,15 @@
       </button>
       <span class="shell__spacer"></span>
 
+      <button
+        mat-icon-button
+        (click)="theme.toggle()"
+        [attr.aria-label]="isDark() ? 'Switch to light mode' : 'Switch to dark mode'"
+        matTooltip="Toggle light / dark"
+      >
+        <mat-icon>{{ isDark() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      </button>
+
       <button mat-button [matMenuTriggerFor]="userMenu" aria-label="Open user menu">
         <mat-icon>account_circle</mat-icon>
         <span>{{ user()?.firstName }}</span>
@@ -59,9 +68,30 @@
           <div class="name">{{ user()?.firstName }} {{ user()?.lastName }}</div>
           <div class="role">{{ roleLabel() }}</div>
         </div>
+        <button mat-menu-item [matMenuTriggerFor]="themeMenu">
+          <mat-icon>palette</mat-icon>
+          <span>Theme</span>
+        </button>
         <button mat-menu-item (click)="logout()">
           <mat-icon>logout</mat-icon>
           <span>Sign out</span>
+        </button>
+      </mat-menu>
+      <mat-menu #themeMenu="matMenu">
+        <button mat-menu-item (click)="theme.setMode('light')">
+          <mat-icon>light_mode</mat-icon>
+          <span>Light</span>
+          @if (themeMode() === 'light') { <mat-icon>check</mat-icon> }
+        </button>
+        <button mat-menu-item (click)="theme.setMode('dark')">
+          <mat-icon>dark_mode</mat-icon>
+          <span>Dark</span>
+          @if (themeMode() === 'dark') { <mat-icon>check</mat-icon> }
+        </button>
+        <button mat-menu-item (click)="theme.setMode('system')">
+          <mat-icon>brightness_auto</mat-icon>
+          <span>System</span>
+          @if (themeMode() === 'system') { <mat-icon>check</mat-icon> }
         </button>
       </mat-menu>
     </mat-toolbar>

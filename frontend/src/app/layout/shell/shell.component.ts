@@ -9,7 +9,9 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuthService } from '../../core/auth/auth.service';
+import { ThemeService } from '../../core/services/theme.service';
 import { ROLE_LABELS } from '../../core/models/role.model';
 import { BREADCRUMB_LABELS } from '../breadcrumbs';
 import { NAVIGATION, NavGroup } from '../navigation';
@@ -27,6 +29,7 @@ import { environment } from '../../../environments/environment';
     MatIconModule,
     MatButtonModule,
     MatMenuModule,
+    MatTooltipModule,
   ],
   templateUrl: './shell.component.html',
   styleUrl: './shell.component.scss',
@@ -35,6 +38,10 @@ export class ShellComponent {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly breakpoints = inject(BreakpointObserver);
+  readonly theme = inject(ThemeService);
+
+  readonly isDark = computed(() => this.theme.resolved() === 'dark');
+  readonly themeMode = this.theme.themeMode;
 
   readonly branding = environment.branding;
   readonly user = this.auth.currentUser;
