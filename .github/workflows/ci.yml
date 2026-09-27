@@ -18,6 +18,10 @@ jobs:
     defaults:
       run:
         working-directory: backend
+    env:
+      # Prisma needs DATABASE_URL to parse the datasource for `validate`/`generate`.
+      # No connection is made in CI (unit tests mock Prisma), so a placeholder is fine.
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/configuration_portal?schema=public
     steps:
       - uses: actions/checkout@v4
 
