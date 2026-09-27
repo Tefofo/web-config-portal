@@ -15,4 +15,11 @@ export const environment = {
 
   /** Base URL of the public site renderer app (for website preview links). */
   siteRendererUrl: 'http://localhost:4300',
+
+  /** Portal branding — change to rebrand the portal (see environment.ts). */
+  branding: {
+    productName: 'TEKINSEL Platform',
+    loginSubtitle: 'Sign in to continue',
+    companyName: 'TEKINSEL',
+  },
 };

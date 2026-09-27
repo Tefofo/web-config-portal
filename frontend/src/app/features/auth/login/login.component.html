@@ -4,8 +4,8 @@
       <mat-progress-bar mode="indeterminate" aria-label="Signing in" />
     }
     <mat-card-header>
-      <mat-card-title>Configuration Portal</mat-card-title>
-      <mat-card-subtitle>Sign in to continue</mat-card-subtitle>
+      <mat-card-title>{{ branding.productName }}</mat-card-title>
+      <mat-card-subtitle>{{ branding.loginSubtitle }}</mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content>
@@ -71,16 +71,18 @@
         </button>
       </form>
 
-      <div class="login__hint">
-        <p>Demo accounts (password: <code>password123</code>):</p>
-        <ul>
-          <li><strong>admin&#64;portal.dev</strong> — Administrator</li>
-          <li><strong>manager&#64;portal.dev</strong> — Configuration Manager</li>
-          <li><strong>viewer&#64;portal.dev</strong> — Viewer</li>
-        </ul>
-      </div>
+      @if (showDemoAccounts) {
+        <div class="login__hint">
+          <p>Demo accounts (password: <code>{{ demoPassword }}</code>):</p>
+          <ul>
+            @for (account of demoAccounts; track account.email) {
+              <li><strong>{{ account.email }}</strong> — {{ account.role }}</li>
+            }
+          </ul>
+        </div>
+      }
     </mat-card-content>
   </mat-card>
 
-  <p class="login__brand">A <strong>TEKINSEL</strong> platform</p>
+  <p class="login__brand">A <strong>{{ branding.companyName }}</strong> platform</p>
 </div>

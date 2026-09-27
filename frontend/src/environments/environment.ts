@@ -21,4 +21,15 @@ export const environment = {
 
   /** Base URL of the public site renderer app (for website preview links). */
   siteRendererUrl: 'http://localhost:4300',
+
+  /**
+   * Portal branding. Change these to rebrand the portal (product name, login
+   * copy, and the company shown in "Powered by …"). One place to edit — no
+   * template changes needed.
+   */
+  branding: {
+    productName: 'TEKINSEL Platform',
+    loginSubtitle: 'Sign in to manage your configuration and website',
+    companyName: 'TEKINSEL',
+  },
 };

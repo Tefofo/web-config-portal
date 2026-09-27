@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { AuthService } from '../../../core/auth/auth.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -34,6 +35,18 @@ export class LoginComponent {
   readonly loading = signal(false);
   readonly errorMessage = signal<string | null>(null);
   readonly hidePassword = signal(true);
+
+  /** Config-driven branding (product name, subtitle, company). */
+  readonly branding = environment.branding;
+
+  /** Demo accounts hint — only shown outside production. */
+  readonly showDemoAccounts = !environment.production;
+  readonly demoPassword = 'Password123!';
+  readonly demoAccounts = [
+    { email: 'admin@example.local', role: 'Administrator' },
+    { email: 'manager@example.local', role: 'Configuration Manager' },
+    { email: 'viewer@example.local', role: 'Viewer' },
+  ];
 
   readonly form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],

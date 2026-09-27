@@ -13,6 +13,7 @@ import { AuthService } from '../../core/auth/auth.service';
 import { ROLE_LABELS } from '../../core/models/role.model';
 import { BREADCRUMB_LABELS } from '../breadcrumbs';
 import { NAVIGATION, NavGroup } from '../navigation';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-shell',
@@ -35,6 +36,7 @@ export class ShellComponent {
   private readonly router = inject(Router);
   private readonly breakpoints = inject(BreakpointObserver);
 
+  readonly branding = environment.branding;
   readonly user = this.auth.currentUser;
   readonly roleLabel = computed(() => {
     const role = this.user()?.role;
