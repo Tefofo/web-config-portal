@@ -93,3 +93,22 @@ a.active-link {
     color: var(--mat-sys-on-surface-variant);
   }
 }
+
+.shell__powered {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  background: var(--mat-sys-surface-container-low);
+  font: var(--mat-sys-label-small);
+  color: var(--mat-sys-on-surface-variant);
+
+  strong {
+    letter-spacing: 0.1em;
+    color: var(--mat-sys-primary);
+  }
+}

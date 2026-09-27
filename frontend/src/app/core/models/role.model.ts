@@ -84,6 +84,8 @@ export const ROLE_PERMISSIONS: Record<RoleCode, Permission[]> = {
     'website:view',
     'website:manage',
   ],
+  // Note: keep in sync with the backend. VIEWER is read-only everywhere; the
+  // backend rejects any write from a VIEWER regardless of the frontend.
   VIEWER: [
     'dashboard:view',
     'configuration:view',
@@ -91,6 +93,7 @@ export const ROLE_PERMISSIONS: Record<RoleCode, Permission[]> = {
     'audit:view',
     'application:view',
     'subscription:view',
+    'website:view',
   ],
 };
 
