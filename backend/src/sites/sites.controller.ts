@@ -1,8 +1,8 @@
-import { Body, Controller, Get, Param, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UserRole } from '@prisma/client';
 import { SitesService } from './sites.service';
-import { UpdateSiteDto } from './dto/site.dto';
+import { SwitchTemplateDto, UpdateSiteDto } from './dto/site.dto';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
 import { Public } from '../common/decorators/public.decorator';
@@ -26,6 +26,12 @@ export class SitesController {
   @Put('me')
   updateMine(@CurrentUser() user: RequestUser, @Body() dto: UpdateSiteDto) {
     return this.service.update(user, dto);
+  }
+
+  @Roles(UserRole.ADMIN)
+  @Post('me/template')
+  switchTemplate(@CurrentUser() user: RequestUser, @Body() dto: SwitchTemplateDto) {
+    return this.service.switchTemplate(user, dto.template);
   }
 }
 

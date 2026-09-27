@@ -32,6 +32,7 @@ async function main(): Promise<void> {
       prisma.auditLog.deleteMany({ where: { tenantId: existing.id } }),
       prisma.featureFlag.deleteMany({ where: { tenantId: existing.id } }),
       prisma.subscription.deleteMany({ where: { tenantId: existing.id } }),
+      prisma.siteConfig.deleteMany({ where: { tenantId: existing.id } }),
       prisma.environment.deleteMany({ where: { tenantId: existing.id } }),
       prisma.user.deleteMany({ where: { tenantId: existing.id } }),
       prisma.tenant.delete({ where: { id: existing.id } }),
@@ -221,6 +222,7 @@ async function main(): Promise<void> {
       template: 'marketing-v1',
       published: true,
       content: {
+        template: 'marketing-v1',
         branding: {
           siteName: 'Bread4Soul',
           logoUrl: '',
@@ -277,12 +279,137 @@ async function main(): Promise<void> {
     },
   });
 
+  // ===========================================================================
+  // Second tenant: Traditional Cafe (restaurant-v1 template)
+  // ===========================================================================
+  const cafeExisting = await prisma.tenant.findUnique({ where: { slug: 'traditional-cafe' } });
+  if (cafeExisting) {
+    await prisma.$transaction([
+      prisma.siteConfig.deleteMany({ where: { tenantId: cafeExisting.id } }),
+      prisma.subscription.deleteMany({ where: { tenantId: cafeExisting.id } }),
+      prisma.user.deleteMany({ where: { tenantId: cafeExisting.id } }),
+      prisma.tenant.delete({ where: { id: cafeExisting.id } }),
+    ]);
+  }
+
+  const cafe = await prisma.tenant.create({
+    data: { name: 'Traditional Cafe', slug: 'traditional-cafe' },
+  });
+
+  await prisma.user.create({
+    data: {
+      tenantId: cafe.id,
+      email: 'admin@traditionalcafe.local',
+      passwordHash,
+      firstName: 'Cafe',
+      lastName: 'Owner',
+      role: UserRole.ADMIN,
+    },
+  });
+
+  const cafeStarter = PLAN_LIMITS[SubscriptionPlan.STARTER];
+  await prisma.subscription.create({
+    data: {
+      tenantId: cafe.id,
+      plan: SubscriptionPlan.STARTER,
+      status: SubscriptionStatus.ACTIVE,
+      userLimit: cafeStarter.userLimit,
+      environmentLimit: cafeStarter.environmentLimit,
+      applicationLimit: cafeStarter.applicationLimit,
+      configurationLimit: cafeStarter.configurationLimit,
+    },
+  });
+
+  await prisma.siteConfig.create({
+    data: {
+      tenantId: cafe.id,
+      template: 'restaurant-v1',
+      published: true,
+      content: {
+        template: 'restaurant-v1',
+        branding: {
+          siteName: 'Traditional Cafe',
+          logoUrl: '',
+          primaryColor: '#3e2723',
+          secondaryColor: '#c98a3a',
+          fontFamily: 'Poppins',
+        },
+        hero: {
+          headline: 'Traditional Cafe',
+          subheadline: 'Authentic African cuisine, comfort food & good vibes in Riverside View.',
+          backgroundImageUrl:
+            'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=80',
+          ctaLabel: 'View Menu',
+          ctaUrl: '#menu',
+        },
+        about: {
+          heading: 'About Traditional Cafe',
+          body: 'A neighbourhood spot serving slow-cooked African classics, hearty comfort food, and crafted drinks. Great food, warm hospitality, and a laid-back atmosphere — all week long.',
+          imageUrl:
+            'https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1200&q=80',
+        },
+        menuCategories: ['African Cuisine', 'Comfort Food', 'Drinks'],
+        menu: [
+          { name: 'Mogodu', description: 'Slow-cooked tripe in a rich traditional sauce', price: 89, category: 'African Cuisine', tag: 'signature' },
+          { name: 'Ox Tongue', description: 'Tender braised ox tongue with chakalaka', price: 109, category: 'African Cuisine', tag: 'signature' },
+          { name: 'Dombe', description: 'Steamed bread served with stew', price: 45, category: 'African Cuisine', tag: '' },
+          { name: 'Oxtail Stew', description: 'Fall-off-the-bone oxtail in tomato gravy', price: 139, category: 'African Cuisine', tag: 'special' },
+          { name: 'Pap & Vleis', description: 'Grilled meat with creamy pap and sauce', price: 95, category: 'Comfort Food', tag: '' },
+          { name: 'Burger & Chips', description: 'Classic beef burger with seasoned fries', price: 85, category: 'Comfort Food', tag: '' },
+          { name: 'Wings Platter', description: '12 crispy wings with dipping sauces', price: 99, category: 'Comfort Food', tag: '' },
+          { name: 'Signature Cocktail', description: 'House-blend African-inspired cocktail', price: 75, category: 'Drinks', tag: 'signature' },
+          { name: 'Craft Beer', description: 'Locally brewed craft on tap', price: 55, category: 'Drinks', tag: '' },
+          { name: 'Soft Drinks', description: 'Assorted cold beverages', price: 30, category: 'Drinks', tag: '' },
+        ],
+        hours: [
+          { days: 'Monday - Thursday', time: '10:00 AM - 12:00 AM' },
+          { days: 'Friday - Saturday', time: '10:00 AM - 02:00 AM' },
+          { days: 'Sunday', time: '10:00 AM - 01:00 AM' },
+        ],
+        amenities: ['On-site security', 'Free parking', 'Wheelchair accessible', 'Free Wi-Fi'],
+        orderUrl:
+          'https://www.ubereats.com/za/store/traditional-cafe-riverside-view/E8u-y9TyVnO6z25QP6_KnA',
+        events: [
+          { title: 'Mogodu Mondays', date: '', venue: 'Traditional Cafe', description: 'Local food and music kickoff to start your week', ticketUrl: '' },
+          { title: 'Throwback Thursdays', date: '', venue: 'Traditional Cafe', description: 'Retro-themed music nights with classic hits', ticketUrl: '' },
+          { title: 'Soul Sundays', date: '', venue: 'Traditional Cafe', description: 'Laid-back afternoon vibes with soulful tunes', ticketUrl: '' },
+        ],
+        gallery: [
+          'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?auto=format&fit=crop&w=800&q=80',
+        ],
+        contact: {
+          email: '',
+          phone: '+27 73 616 8909',
+          address: '1218 Francolin Crescent, Riverside View Ext 30, Johannesburg, 2191',
+          instagram: '',
+          facebook: '',
+          twitter: '',
+        },
+        sections: {
+          hero: true,
+          about: true,
+          menu: true,
+          hours: true,
+          amenities: true,
+          events: true,
+          gallery: true,
+          contact: true,
+        },
+      },
+    },
+  });
+
   console.log('Seed complete. Demo tenant: demo-co');
   console.log('Accounts (password from SEED_DEMO_PASSWORD):');
   console.log('  platform@example.local  (PLATFORM_ADMIN)');
   console.log('  admin@example.local     (ADMIN)');
   console.log('  manager@example.local   (CONFIGURATION_MANAGER)');
   console.log('  viewer@example.local    (VIEWER)');
+  console.log('Second tenant: traditional-cafe (restaurant-v1)');
+  console.log('  admin@traditionalcafe.local (ADMIN)');
 }
 
 main()

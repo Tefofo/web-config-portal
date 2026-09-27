@@ -1,8 +1,11 @@
 /**
- * Mirrors the backend SiteDocument contract (backend/src/sites/site-document.ts)
- * for the "marketing-v1" template. Kept in sync manually; a shared package
- * could replace this later.
+ * Mirrors the backend SiteDocument contract (backend/src/sites/site-document.ts).
+ * Template-aware: marketing-v1 and restaurant-v1 share common blocks and add
+ * their own sections. Kept in sync manually; a shared package could replace
+ * this later.
  */
+
+export type SiteTemplate = 'marketing-v1' | 'restaurant-v1';
 
 export interface SiteBranding {
   siteName: string;
@@ -43,7 +46,20 @@ export interface SiteContact {
   twitter: string;
 }
 
-export interface SiteSectionToggles {
+export interface MenuItem {
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  tag: string;
+}
+
+export interface OpeningHours {
+  days: string;
+  time: string;
+}
+
+export interface MarketingSectionToggles {
   hero: boolean;
   about: boolean;
   events: boolean;
@@ -51,15 +67,45 @@ export interface SiteSectionToggles {
   contact: boolean;
 }
 
-export interface SiteDocument {
+export interface RestaurantSectionToggles {
+  hero: boolean;
+  about: boolean;
+  menu: boolean;
+  hours: boolean;
+  amenities: boolean;
+  events: boolean;
+  gallery: boolean;
+  contact: boolean;
+}
+
+export interface MarketingSiteDocument {
+  template: 'marketing-v1';
   branding: SiteBranding;
   hero: SiteHero;
   about: SiteAbout;
   events: SiteEvent[];
   gallery: string[];
   contact: SiteContact;
-  sections: SiteSectionToggles;
+  sections: MarketingSectionToggles;
 }
+
+export interface RestaurantSiteDocument {
+  template: 'restaurant-v1';
+  branding: SiteBranding;
+  hero: SiteHero;
+  about: SiteAbout;
+  menuCategories: string[];
+  menu: MenuItem[];
+  hours: OpeningHours[];
+  amenities: string[];
+  orderUrl: string;
+  events: SiteEvent[];
+  gallery: string[];
+  contact: SiteContact;
+  sections: RestaurantSectionToggles;
+}
+
+export type SiteDocument = MarketingSiteDocument | RestaurantSiteDocument;
 
 /** Public site response returned by GET /public/sites/:slug. */
 export interface PublicSite {

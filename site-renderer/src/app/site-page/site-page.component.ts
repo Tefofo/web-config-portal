@@ -8,6 +8,9 @@ import { EventsComponent } from '../sections/events.component';
 import { GalleryComponent } from '../sections/gallery.component';
 import { ContactComponent } from '../sections/contact.component';
 import { FooterComponent } from '../sections/footer.component';
+import { MenuComponent } from '../sections/menu.component';
+import { HoursComponent } from '../sections/hours.component';
+import { AmenitiesComponent } from '../sections/amenities.component';
 
 type LoadState = 'loading' | 'ready' | 'notfound' | 'error';
 
@@ -20,6 +23,9 @@ type LoadState = 'loading' | 'ready' | 'notfound' | 'error';
     GalleryComponent,
     ContactComponent,
     FooterComponent,
+    MenuComponent,
+    HoursComponent,
+    AmenitiesComponent,
   ],
   templateUrl: './site-page.component.html',
 })

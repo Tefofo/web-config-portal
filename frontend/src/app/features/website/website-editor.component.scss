@@ -69,3 +69,9 @@ input[type='color'] {
   padding: 0;
   cursor: pointer;
 }
+
+.subhead {
+  margin: 0.5rem 0 0.75rem;
+  font: var(--mat-sys-title-small);
+  color: var(--mat-sys-on-surface-variant);
+}

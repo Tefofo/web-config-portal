@@ -7,6 +7,15 @@ import { SiteContact } from '../site-document';
     <section id="contact" class="py-20 text-white" [style.background-color]="'var(--brand-primary)'">
       <div class="mx-auto max-w-3xl px-6 text-center">
         <h2 class="text-3xl font-bold">Get in touch</h2>
+        @if (orderUrl()) {
+          <a
+            [href]="orderUrl()"
+            target="_blank"
+            rel="noopener"
+            class="mt-6 inline-block rounded-full px-8 py-3 text-base font-semibold text-white shadow-lg transition hover:opacity-90"
+            [style.background-color]="'var(--brand-secondary)'"
+          >Order Online</a>
+        }
         <div class="mt-8 space-y-2 text-lg text-gray-200">
           @if (contact().email) {
             <p><a class="hover:underline" [href]="'mailto:' + contact().email">{{ contact().email }}</a></p>
@@ -36,6 +45,8 @@ import { SiteContact } from '../site-document';
 })
 export class ContactComponent {
   readonly contact = input.required<SiteContact>();
+  /** Optional "Order Online" link (restaurant template). */
+  readonly orderUrl = input<string>('');
 
   readonly socials = computed(() => {
     const c = this.contact();

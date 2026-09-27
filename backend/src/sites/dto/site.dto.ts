@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsObject, IsOptional } from 'class-validator';
-import { SiteDocument } from '../site-document';
+import { IsBoolean, IsIn, IsObject, IsOptional, IsString } from 'class-validator';
+import { SiteDocument, SiteTemplate } from '../site-document';
 
 /**
  * Update payload for a tenant's site. `content` is validated structurally in
@@ -16,4 +16,11 @@ export class UpdateSiteDto {
   @IsOptional()
   @IsBoolean()
   published?: boolean;
+}
+
+export class SwitchTemplateDto {
+  @ApiProperty({ enum: ['marketing-v1', 'restaurant-v1'] })
+  @IsString()
+  @IsIn(['marketing-v1', 'restaurant-v1'])
+  template!: SiteTemplate;
 }
