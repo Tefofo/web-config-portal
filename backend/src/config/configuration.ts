@@ -18,7 +18,7 @@ export interface AppConfig {
 export default (): AppConfig => ({
   port: parseInt(process.env.PORT ?? '3000', 10),
   nodeEnv: process.env.NODE_ENV ?? 'development',
-  frontendUrl: process.env.FRONTEND_URL ?? 'http://localhost:4200',
+  frontendUrl: process.env.FRONTEND_URL ?? 'http://localhost:4200,http://localhost:4300',
   jwt: {
     accessSecret: process.env.JWT_ACCESS_SECRET ?? 'dev-access-secret',
     refreshSecret: process.env.JWT_REFRESH_SECRET ?? 'dev-refresh-secret',

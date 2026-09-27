@@ -212,6 +212,71 @@ async function main(): Promise<void> {
   // Reference the seeded app so linters see it used.
   void portalApp;
 
+  // --- Site config (Bread4Soul marketing website) ---
+  await prisma.siteConfig.upsert({
+    where: { tenantId: tenant.id },
+    update: {},
+    create: {
+      tenantId: tenant.id,
+      template: 'marketing-v1',
+      published: true,
+      content: {
+        branding: {
+          siteName: 'Bread4Soul',
+          logoUrl: '',
+          primaryColor: '#1a1a2e',
+          secondaryColor: '#e94560',
+          fontFamily: 'Poppins',
+        },
+        hero: {
+          headline: 'Bread4Soul',
+          subheadline: 'A premium bi-monthly musical experience for the soul.',
+          backgroundImageUrl:
+            'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=1600&q=80',
+          ctaLabel: 'Get Tickets',
+          ctaUrl: '#events',
+        },
+        about: {
+          heading: 'About Bread4Soul',
+          body: 'Bread4Soul is a premium bi-monthly musical event bringing together soulful sounds, great people, and unforgettable nights. Join a growing community that celebrates music, connection, and culture.',
+          imageUrl:
+            'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1200&q=80',
+        },
+        events: [
+          {
+            title: 'Bread4Soul Sessions — Winter Edition',
+            date: '2026-07-25T19:00:00.000Z',
+            venue: 'Johannesburg, South Africa',
+            description: 'An intimate evening of live soul, jazz, and house.',
+            ticketUrl: '#',
+          },
+          {
+            title: 'Bread4Soul Sessions — Spring Edition',
+            date: '2026-09-26T19:00:00.000Z',
+            venue: 'Cape Town, South Africa',
+            description: 'The soul sessions come to the Mother City.',
+            ticketUrl: '#',
+          },
+        ],
+        gallery: [
+          'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=80',
+        ],
+        contact: {
+          email: 'hello@bread4soul.co.za',
+          phone: '',
+          address: 'Johannesburg, South Africa',
+          instagram: 'https://instagram.com/bread4soul',
+          facebook: '',
+          twitter: '',
+        },
+        sections: { hero: true, about: true, events: true, gallery: true, contact: true },
+      },
+    },
+  });
+
   console.log('Seed complete. Demo tenant: demo-co');
   console.log('Accounts (password from SEED_DEMO_PASSWORD):');
   console.log('  platform@example.local  (PLATFORM_ADMIN)');

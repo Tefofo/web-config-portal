@@ -19,7 +19,8 @@ export type PermissionFeature =
   | 'settings'
   | 'application'
   | 'apikey'
-  | 'subscription';
+  | 'subscription'
+  | 'website';
 
 export type PermissionAction =
   | 'view'
@@ -67,6 +68,8 @@ export const ROLE_PERMISSIONS: Record<RoleCode, Permission[]> = {
     'application:manage',
     'apikey:manage',
     'subscription:view',
+    'website:view',
+    'website:manage',
   ],
   CONFIGURATION_MANAGER: [
     'dashboard:view',
@@ -78,6 +81,8 @@ export const ROLE_PERMISSIONS: Record<RoleCode, Permission[]> = {
     'audit:view',
     'application:view',
     'subscription:view',
+    'website:view',
+    'website:manage',
   ],
   VIEWER: [
     'dashboard:view',

@@ -12,4 +12,7 @@ export const environment = {
    * `apiUrl` instead of the in-memory mock. Kept `true` by default.
    */
   useMockApi: true,
+
+  /** Base URL of the public site renderer app (for website preview links). */
+  siteRendererUrl: 'http://localhost:4300',
 };

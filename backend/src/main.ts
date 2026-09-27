@@ -14,8 +14,24 @@ async function bootstrap(): Promise<void> {
   app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });
 
   app.use(helmet());
+  // FRONTEND_URL may be a comma-separated list of allowed origins (portal +
+  // site renderer). Only listed origins are allowed — never a wildcard.
+  const allowedOrigins = (config.get<string>('frontendUrl') ?? '')
+    .split(',')
+    .map((o) => o.trim())
+    .filter(Boolean);
   app.enableCors({
-    origin: config.get<string>('frontendUrl'),
+    origin: (
+      origin: string | undefined,
+      callback: (err: Error | null, allow?: boolean) => void,
+    ) => {
+      // Allow non-browser clients (no Origin header) and any listed origin.
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(null, false);
+      }
+    },
     credentials: true,
   });
 

@@ -53,6 +53,15 @@ export const routes: Routes = [
         title: 'Subscription & Usage',
       },
       {
+        path: 'website',
+        canActivate: [permissionGuard('website:view')],
+        loadComponent: () =>
+          import('./features/website/website-editor.component').then(
+            (m) => m.WebsiteEditorComponent,
+          ),
+        title: 'Website',
+      },
+      {
         path: 'users',
         canActivate: [permissionGuard('user:view', 'user:manage')],
         loadChildren: () => import('./features/users/users.routes').then((m) => m.usersRoutes),

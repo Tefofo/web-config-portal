@@ -1,21 +1,36 @@
 # Configuration Management SaaS Platform
 
-A multi-tenant Configuration Management platform: an Angular web app, a NestJS
-REST API, PostgreSQL via Prisma, JWT auth, role-based access control, tenant
-isolation, application API keys with a runtime configuration API, audit logging,
-and subscription usage limits.
+A multi-tenant SaaS platform where each customer (tenant) logs into a portal to
+**configure and publish their own marketing website** from a shared template,
+alongside full configuration management: JWT auth, role-based access control,
+tenant isolation, application API keys with a runtime configuration API, audit
+logging, and subscription usage limits.
 
-This is a monorepo with an independently buildable **frontend** and **backend**.
+This is a monorepo with three independently buildable apps:
 
 ```
 configuration-platform/
-├── frontend/        # Angular 22 web application
+├── frontend/        # Angular 22 admin portal (Material) — manage config + edit your website
 ├── backend/         # NestJS 11 + Prisma + PostgreSQL API
+├── site-renderer/   # Angular 22 + Tailwind public site renderer — displays each tenant's website
 ├── docs/
 ├── docker/
 ├── docker-compose.yml
 └── README.md
 ```
+
+## The website builder (marketing-v1 template)
+
+A tenant customises their site's **content + branding** in the portal
+(`Website` section): branding (name, logo, colours, font), a hero, about,
+events (with a live countdown), a gallery, contact/social links, and per-section
+show/hide toggles. They **publish**, and the public site renderer displays it at
+`/site/<tenant-slug>` styled by their branding. One template, many tenants — no
+per-customer codebase.
+
+- Editor: portal → **Website** (`/website`)
+- Rendered site: `http://localhost:4300/site/<slug>` (e.g. `/site/demo-co` for the seeded Bread4Soul demo)
+- Public API the renderer reads: `GET /api/v1/public/sites/:slug` (only published sites)
 
 ## Prerequisites
 
@@ -52,15 +67,31 @@ npm run seed                  # loads demo tenant, users, configs, etc.
 npm run start:dev             # API on http://localhost:3000, docs at /api/docs
 ```
 
-### 3. Frontend
+### 3. Frontend (admin portal)
 
 ```bash
 cd frontend
 npm install
 # To use the real backend instead of the in-memory mock, set
 # useMockApi: false in src/environments/environment.ts
-npm start                     # app on http://localhost:4200
+npm start                     # portal on http://localhost:4200
 ```
+
+### 4. Site renderer (public websites)
+
+```bash
+cd site-renderer
+npm install
+npm start -- --port 4300      # renderer on http://localhost:4300
+```
+
+Then open `http://localhost:4300/site/demo-co` to see the seeded Bread4Soul
+site. Edit it in the portal under **Website**, publish, and refresh the renderer
+to see changes.
+
+> The backend allows browser requests from both the portal and renderer origins
+> via a comma-separated `FRONTEND_URL` in `backend/.env`
+> (`http://localhost:4200,http://localhost:4300`).
 
 ## Demo accounts
 
@@ -80,10 +111,14 @@ password `password123`) used when `useMockApi: true`.
 ## Architecture
 
 ```
-Angular Web App  ──HTTPS/REST──▶  NestJS API  ──Prisma──▶  PostgreSQL
+Admin Portal (Angular)   ──auth'd REST──▶
+                                          NestJS API ──Prisma──▶ PostgreSQL
+Site Renderer (Angular)  ──public REST──▶
 ```
 
-- The Angular app never talks to PostgreSQL directly.
+- The Angular apps never talk to PostgreSQL directly.
+- The portal uses authenticated, tenant-scoped endpoints. The renderer uses only
+  the public `GET /public/sites/:slug` endpoint (published sites of active tenants).
 - Every tenant-owned query is scoped by `tenantId`; the backend enforces tenant
   isolation and authorization. The frontend only shapes the UX.
 - Application-to-application configuration access uses **API keys** (not user

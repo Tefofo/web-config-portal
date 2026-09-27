@@ -16,6 +16,7 @@ import { UsersModule } from './users/users.module';
 import { RolesModule } from './roles/roles.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { SitesModule } from './sites/sites.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { RolesGuard } from './auth/guards/roles.guard';
 
@@ -38,6 +39,7 @@ import { RolesGuard } from './auth/guards/roles.guard';
     RolesModule,
     SubscriptionsModule,
     DashboardModule,
+    SitesModule,
     HealthModule,
   ],
   providers: [

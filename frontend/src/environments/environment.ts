@@ -18,4 +18,7 @@ export const environment = {
    * out of the box without a running backend.
    */
   useMockApi: false,
+
+  /** Base URL of the public site renderer app (for website preview links). */
+  siteRendererUrl: 'http://localhost:4300',
 };

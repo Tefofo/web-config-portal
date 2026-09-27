@@ -94,6 +94,7 @@ model Tenant {
   auditLogs      AuditLog[]
   subscriptions  Subscription[]
   featureFlags   FeatureFlag[]
+  siteConfig     SiteConfig?
 }
 
 model User {
@@ -278,5 +279,26 @@ model FeatureFlag {
   tenant Tenant @relation(fields: [tenantId], references: [id])
 
   @@unique([tenantId, key])
+  @@index([tenantId])
+}
+
+/// Per-tenant marketing website configuration. One active site document per
+/// tenant, stored as structured JSON (branding, hero, about, events, gallery,
+/// contact, section toggles). The public site renderer reads this by tenant
+/// slug; the portal editor updates it. `published` gates public visibility.
+model SiteConfig {
+  id        String  @id @default(cuid())
+  tenantId  String  @unique
+  template  String  @default("marketing-v1")
+  published Boolean @default(false)
+
+  // The full site document (typed in application code as SiteDocument).
+  content Json
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
   @@index([tenantId])
 }

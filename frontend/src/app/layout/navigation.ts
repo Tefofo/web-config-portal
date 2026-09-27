@@ -15,7 +15,10 @@ export interface NavGroup {
 
 export const NAVIGATION: NavGroup[] = [
   {
-    items: [{ label: 'Dashboard', icon: 'dashboard', route: '/dashboard', permissions: ['dashboard:view'] }],
+    items: [
+      { label: 'Dashboard', icon: 'dashboard', route: '/dashboard', permissions: ['dashboard:view'] },
+      { label: 'Website', icon: 'language', route: '/website', permissions: ['website:view', 'website:manage'] },
+    ],
   },
   {
     label: 'Configuration',
