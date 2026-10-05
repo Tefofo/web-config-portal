@@ -2,31 +2,15 @@ import { Component, effect, inject, input, signal } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { SiteService } from '../site.service';
 import { PublicSite } from '../site-document';
-import { HeroComponent } from '../sections/hero.component';
-import { AboutComponent } from '../sections/about.component';
-import { EventsComponent } from '../sections/events.component';
-import { GalleryComponent } from '../sections/gallery.component';
-import { ContactComponent } from '../sections/contact.component';
+import { MarketingTemplateComponent } from '../templates/marketing-template/marketing-template.component';
+import { RestaurantTemplateComponent } from '../templates/restaurant-template/restaurant-template.component';
 import { FooterComponent } from '../sections/footer.component';
-import { MenuComponent } from '../sections/menu.component';
-import { HoursComponent } from '../sections/hours.component';
-import { AmenitiesComponent } from '../sections/amenities.component';
 
 type LoadState = 'loading' | 'ready' | 'notfound' | 'error';
 
 @Component({
   selector: 'app-site-page',
-  imports: [
-    HeroComponent,
-    AboutComponent,
-    EventsComponent,
-    GalleryComponent,
-    ContactComponent,
-    FooterComponent,
-    MenuComponent,
-    HoursComponent,
-    AmenitiesComponent,
-  ],
+  imports: [MarketingTemplateComponent, RestaurantTemplateComponent, FooterComponent],
   templateUrl: './site-page.component.html',
 })
 export class SitePageComponent {

@@ -25,49 +25,10 @@
       <main>
         @switch (s.content.template) {
           @case ('restaurant-v1') {
-            @let r = s.content;
-            @if (r.sections.hero) {
-              <app-hero [hero]="r.hero" />
-            }
-            @if (r.sections.about) {
-              <app-about [about]="r.about" />
-            }
-            @if (r.sections.menu) {
-              <app-menu [menu]="r.menu" [categories]="r.menuCategories" />
-            }
-            @if (r.sections.hours) {
-              <app-hours [hours]="r.hours" />
-            }
-            @if (r.sections.amenities) {
-              <app-amenities [amenities]="r.amenities" />
-            }
-            @if (r.sections.events) {
-              <app-events [events]="r.events" />
-            }
-            @if (r.sections.gallery) {
-              <app-gallery [images]="r.gallery" />
-            }
-            @if (r.sections.contact) {
-              <app-contact [contact]="r.contact" [orderUrl]="r.orderUrl" />
-            }
+            <app-restaurant-template [document]="s.content" />
           }
           @case ('marketing-v1') {
-            @let m = s.content;
-            @if (m.sections.hero) {
-              <app-hero [hero]="m.hero" />
-            }
-            @if (m.sections.about) {
-              <app-about [about]="m.about" />
-            }
-            @if (m.sections.events) {
-              <app-events [events]="m.events" />
-            }
-            @if (m.sections.gallery) {
-              <app-gallery [images]="m.gallery" />
-            }
-            @if (m.sections.contact) {
-              <app-contact [contact]="m.contact" />
-            }
+            <app-marketing-template [document]="s.content" />
           }
         }
         <app-footer [siteName]="s.content.branding.siteName || s.siteName" />

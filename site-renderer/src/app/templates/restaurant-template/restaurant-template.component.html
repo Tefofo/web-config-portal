@@ -1,0 +1,25 @@
+@let doc = document();
+@if (doc.sections.hero) {
+  <app-hero [hero]="doc.hero" />
+}
+@if (doc.sections.about) {
+  <app-about [about]="doc.about" />
+}
+@if (doc.sections.menu) {
+  <app-menu [menu]="doc.menu" [categories]="doc.menuCategories" />
+}
+@if (doc.sections.hours) {
+  <app-hours [hours]="doc.hours" />
+}
+@if (doc.sections.amenities) {
+  <app-amenities [amenities]="doc.amenities" />
+}
+@if (doc.sections.events) {
+  <app-events [events]="doc.events" />
+}
+@if (doc.sections.gallery) {
+  <app-gallery [images]="doc.gallery" />
+}
+@if (doc.sections.contact) {
+  <app-contact [contact]="doc.contact" [orderUrl]="doc.orderUrl" />
+}

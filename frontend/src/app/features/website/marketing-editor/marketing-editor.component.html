@@ -1,0 +1,197 @@
+<form [formGroup]="form" novalidate>
+  <mat-tab-group>
+    <!-- Branding -->
+    <mat-tab label="Branding">
+      <div class="tab-body" formGroupName="branding">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Site name</mat-label>
+          <input matInput formControlName="siteName" required />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Logo URL</mat-label>
+          <input matInput formControlName="logoUrl" placeholder="https://…" />
+        </mat-form-field>
+        <div class="grid-2">
+          <div class="color-row">
+            <input type="color" formControlName="primaryColor" aria-label="Primary colour" />
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Primary colour</mat-label>
+              <input matInput formControlName="primaryColor" />
+            </mat-form-field>
+          </div>
+          <div class="color-row">
+            <input type="color" formControlName="secondaryColor" aria-label="Secondary colour" />
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Secondary colour</mat-label>
+              <input matInput formControlName="secondaryColor" />
+            </mat-form-field>
+          </div>
+        </div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Font family</mat-label>
+          <input matInput formControlName="fontFamily" placeholder="e.g. Poppins" />
+          <mat-hint>A Google Font family name.</mat-hint>
+        </mat-form-field>
+      </div>
+    </mat-tab>
+
+    <!-- Hero -->
+    <mat-tab label="Hero">
+      <div class="tab-body" formGroupName="hero">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Headline</mat-label>
+          <input matInput formControlName="headline" required />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Subheadline</mat-label>
+          <input matInput formControlName="subheadline" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Background image URL</mat-label>
+          <input matInput formControlName="backgroundImageUrl" placeholder="https://…" />
+        </mat-form-field>
+        <div class="grid-2">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Button label</mat-label>
+            <input matInput formControlName="ctaLabel" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Button link</mat-label>
+            <input matInput formControlName="ctaUrl" placeholder="#events or https://…" />
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- About -->
+    <mat-tab label="About">
+      <div class="tab-body" formGroupName="about">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Heading</mat-label>
+          <input matInput formControlName="heading" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Body</mat-label>
+          <textarea matInput rows="5" formControlName="body"></textarea>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Image URL</mat-label>
+          <input matInput formControlName="imageUrl" placeholder="https://…" />
+        </mat-form-field>
+      </div>
+    </mat-tab>
+
+    <!-- Events -->
+    <mat-tab label="Events">
+      <div class="tab-body" formArrayName="events">
+        @for (event of events.controls; track event; let i = $index) {
+          <div class="list-item" [formGroupName]="i">
+            <div class="list-item__header">
+              <strong>Event {{ i + 1 }}</strong>
+              <button mat-icon-button type="button" (click)="removeEvent(i)" aria-label="Remove event">
+                <mat-icon color="warn">delete</mat-icon>
+              </button>
+            </div>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Title</mat-label>
+              <input matInput formControlName="title" required />
+            </mat-form-field>
+            <div class="grid-2">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Date &amp; time (optional, ISO)</mat-label>
+                <input matInput formControlName="date" placeholder="2026-07-25T19:00:00.000Z" />
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Venue</mat-label>
+                <input matInput formControlName="venue" />
+              </mat-form-field>
+            </div>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Description</mat-label>
+              <textarea matInput rows="2" formControlName="description"></textarea>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Ticket URL</mat-label>
+              <input matInput formControlName="ticketUrl" placeholder="https://…" />
+            </mat-form-field>
+          </div>
+        } @empty {
+          <p>No events yet.</p>
+        }
+        <button mat-stroked-button type="button" (click)="addEvent()">
+          <mat-icon>add</mat-icon> Add event
+        </button>
+      </div>
+    </mat-tab>
+
+    <!-- Gallery -->
+    <mat-tab label="Gallery">
+      <div class="tab-body" formArrayName="gallery">
+        @for (image of gallery.controls; track image; let i = $index) {
+          <div class="color-row" [formGroupName]="i">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Image URL {{ i + 1 }}</mat-label>
+              <input matInput formControlName="url" placeholder="https://…" />
+            </mat-form-field>
+            <button mat-icon-button type="button" (click)="removeImage(i)" aria-label="Remove image">
+              <mat-icon color="warn">delete</mat-icon>
+            </button>
+          </div>
+        } @empty {
+          <p>No images yet.</p>
+        }
+        <button mat-stroked-button type="button" (click)="addImage()">
+          <mat-icon>add</mat-icon> Add image
+        </button>
+      </div>
+    </mat-tab>
+
+    <!-- Contact -->
+    <mat-tab label="Contact">
+      <div class="tab-body" formGroupName="contact">
+        <div class="grid-2">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" type="email" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Phone</mat-label>
+            <input matInput formControlName="phone" />
+          </mat-form-field>
+        </div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Address</mat-label>
+          <input matInput formControlName="address" />
+        </mat-form-field>
+        <div class="grid-2">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Instagram URL</mat-label>
+            <input matInput formControlName="instagram" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Facebook URL</mat-label>
+            <input matInput formControlName="facebook" />
+          </mat-form-field>
+        </div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Twitter/X URL</mat-label>
+          <input matInput formControlName="twitter" />
+        </mat-form-field>
+      </div>
+    </mat-tab>
+
+    <!-- Sections -->
+    <mat-tab label="Sections">
+      <div class="tab-body" formGroupName="sections">
+        <p>Show or hide sections on your published site.</p>
+        <div class="toggles">
+          <mat-slide-toggle formControlName="hero">Hero</mat-slide-toggle>
+          <mat-slide-toggle formControlName="about">About</mat-slide-toggle>
+          <mat-slide-toggle formControlName="events">Events</mat-slide-toggle>
+          <mat-slide-toggle formControlName="gallery">Gallery</mat-slide-toggle>
+          <mat-slide-toggle formControlName="contact">Contact</mat-slide-toggle>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</form>

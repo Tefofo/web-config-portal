@@ -1,0 +1,16 @@
+@let doc = document();
+@if (doc.sections.hero) {
+  <app-hero [hero]="doc.hero" />
+}
+@if (doc.sections.about) {
+  <app-about [about]="doc.about" />
+}
+@if (doc.sections.events) {
+  <app-events [events]="doc.events" />
+}
+@if (doc.sections.gallery) {
+  <app-gallery [images]="doc.gallery" />
+}
+@if (doc.sections.contact) {
+  <app-contact [contact]="doc.contact" />
+}

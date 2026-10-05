@@ -2,23 +2,7 @@ import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-amenities',
-  template: `
-    <section id="amenities" class="bg-white py-16">
-      <div class="mx-auto max-w-4xl px-6 text-center">
-        <h2 class="text-3xl font-bold" [style.color]="'var(--brand-primary)'">What we offer</h2>
-        <div class="mt-8 flex flex-wrap justify-center gap-3">
-          @for (item of amenities(); track item) {
-            <span
-              class="rounded-full border px-4 py-2 text-sm font-medium text-gray-700"
-              [style.border-color]="'var(--brand-secondary)'"
-            >{{ item }}</span>
-          } @empty {
-            <p class="text-gray-500">No amenities listed.</p>
-          }
-        </div>
-      </div>
-    </section>
-  `,
+  templateUrl: './amenities.component.html',
 })
 export class AmenitiesComponent {
   readonly amenities = input.required<string[]>();
